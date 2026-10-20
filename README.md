@@ -66,6 +66,7 @@ Copy-Item -Recurse . "$env:USERPROFILE\.claude\skills\geeklens"
 ## 目录内容
 
 - `SKILL.md` — skill 本体。
+- `references/annotation-example.md` — 注解样例：成段解释与行尾一行的分工。
 - `.gitattributes` — 强制 LF 行尾。
 
 ## 相关
