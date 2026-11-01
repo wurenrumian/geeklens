@@ -22,6 +22,7 @@ geekLens 产出的是**副本**，不是源码，也不是项目文档：
 6. **先骨架后逐段**：先给目录与文件表，再逐文件注解。
 7. **语言跟随用户**，术语保留原文英文。
 8. **解释与摘录分层**，证据标签全篇统一三档：**源码事实** / **推断** / **待验证**。
+9. **结构图该画就画**：复杂结构用图讲；md 里直接内嵌 mermaid，导出图片/SVG 时用 [Pele](https://pele.run)。
 
 ## 工作流概要
 
@@ -53,7 +54,7 @@ geekLens 被触发时**必须**把 `calm-explain` 作为本次阅读版的讲解
 
 ## 安装
 
-把本目录复制或软链到 agent 的 skills 目录，目录名须与 frontmatter 的 `name:`（`geeklens`）一致：
+把本目录复制或软链到你的 skills 目录，目录名须与 frontmatter 的 `name:`（`geeklens`）一致：
 
 ```powershell
 # OpenCode
@@ -67,6 +68,7 @@ Copy-Item -Recurse . "$env:USERPROFILE\.claude\skills\geeklens"
 
 - `SKILL.md` — skill 本体。
 - `references/annotation-example.md` — 注解样例：成段解释与行尾一行的分工。
+- `scripts/export-diagram.mjs` — 把 md 里的 mermaid 图用 Pele 导出成 SVG。
 - `.gitattributes` — 强制 LF 行尾。
 
 ## 相关
