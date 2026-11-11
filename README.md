@@ -27,18 +27,20 @@ geekLens 产出的是**副本**，不是源码，也不是项目文档：
 
 ## 工作流概要
 
-界定焦点 → 读源码建两张清单（改动清单、结构清单）→ 定最小文件集 + 顶层 README（默认一份文件）→ 合并产出阅读版 → 数据手册与路径讲解默认内联，够用就不拆 → 交叉链接与校验 → 记 project-memory → 迭代答疑。
+界定焦点 → 读源码建两张清单（改动清单、结构清单）→ 定最小文件集 + 入口文件（默认一份文件）→ 合并产出阅读版 → 数据手册与路径讲解默认内联，够用就不拆 → 交叉链接与校验 → 记 project-memory → 迭代答疑。
 
 ## 产物放在哪
 
-默认 `./tmp/annotated/<focus-slug>/`，由 **project-memory** 管理该目录；阅读版是副本，不入版本库。
+默认 `./tmp/annotated/`，由 **project-memory** 管理该目录；阅读版是副本，不入版本库。
 
 **默认单文件**（大多数焦点）：
 
 ```
-./tmp/annotated/<focus-slug>/
-└── README.md                  # 焦点、来源、阅读顺序、注解正文、数据表、路径讲解、自测题
+./tmp/annotated/
+└── <focus-slug>.md            # tags front-matter + 焦点、来源、阅读顺序、注解正文、数据表、路径讲解、自测题
 ```
+
+文件名就是焦点 slug，它同时是入口。
 
 **触发拆分后**（单份超过约 400 行、内容各自独立顺读、before/after 需并排逐行对照、同一套结构被 2 份以上阅读版引用、链路要跨多份阅读版）：
 
@@ -53,9 +55,11 @@ geekLens 产出的是**副本**，不是源码，也不是项目文档：
 └── <path>.md                  # 仅当链路要跨多份阅读版
 ```
 
-不为图写说明文件，不留 `index.md` / `notes.md` / `summary.md` 这类纯导航文档——导航由顶层 README 文件表承担。
+不为图写说明文件，不留 `index.md` / `notes.md` / `summary.md` 这类纯导航文档——导航由入口文件的文件表承担。
 
-**降级路径**：目标项目没有 project-memory 时，放 `./annotated/<focus-slug>/`，并在该目录内自建 `CHANGELOG.md` 记账。
+**降级路径**：目标项目没有 project-memory 时，放 `./annotated/`，遵守同样的 `tags` 与链接约定，并用 `./annotated/CHANGELOG.md` 记账。
+
+**与 project-memory 的接口**（细节以它的 `SKILL.md` 为准）：`tags` 写在 front-matter（第一个是主 tag，`find-memory.py --tag` 靠它检索）；完成一轮记当天 `journal/` 一行；收尾把入口挂进 `STATE.md` 的「关键链接」；退役移 `archive/annotated/` 并在 `archive/INDEX.md` 追加一行。
 
 ## 与 calm-explain 的关系
 

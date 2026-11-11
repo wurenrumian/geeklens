@@ -11,8 +11,8 @@ description: geekLens —— 给一段聚焦的真实源码（某个功能、某
 
 - 真实源码保持原样——阅读版是**副本**，会随时间与源码漂移，所以记清来源与快照日期即可，不必追漂移。
 - 阅读版面向“想读透这段实现”的人；项目 `docs/` 面向“想用这个结论”的人。
-- 与 **project-memory** skill 配合使用：阅读版放 `./tmp/annotated/<focus-slug>/`，过程写进 `journal/`，入口写进 `STATE.md`。本 skill 只描述“怎么做出好的阅读版”，存放与生命周期交给 project-memory。
-- **降级路径**：若目标项目没有 project-memory，则放 `./annotated/<focus-slug>/`，并在该目录内自建 `CHANGELOG.md` 记账。
+- 与 **project-memory** skill 配合使用：阅读版是 `./tmp/annotated/` 下的普通文档（默认 `annotated/<focus-slug>.md`，多份文件才长成目录），带 `tags` front-matter；过程写进 `journal/`，入口挂进 `STATE.md`。本 skill 只描述“怎么做出好的阅读版”，存放与生命周期交给 project-memory。
+- **降级路径**：若目标项目没有 project-memory，则放 `./annotated/`，遵守同样的 front-matter 与链接约定，并用 `./annotated/CHANGELOG.md` 一行一条记账。
 
 ## 何时用
 
@@ -44,10 +44,10 @@ geekLens 被触发时，**必须**把 calm-explain 作为本次阅读版的讲�
 2. **读源码，建两张清单。**
    - **改动清单**（若有改前/改后）：哪些文件、哪些函数真的变了；哪些是逐字节相同、不要误标。
    - **结构清单**：涉及哪些类型/字段/缓冲区/共享状态，谁拥有、谁写、谁读。
-3. **定最小文件集 + 顶层 README**（见下「目录布局」「文件数最小化与合并」）。先按“默认一份文件”起草，只在触发拆分门槛时才拆；把“读什么、按什么顺序读”写出来，再填内容。
-4. **产出阅读版。** 默认一份文件——注解正文放进 `README.md`，或用一个 `<focus>.annotated.<ext>` 承载；同类内容合并进同一份，用分节标题和 ①②③ 分层。
+3. **定最小文件集 + 入口文件**（见下「目录布局」「文件数最小化与合并」）。先按“默认一份文件”起草，只在触发拆分门槛时才拆；把“读什么、按什么顺序读”写出来，再填内容。
+4. **产出阅读版。** 默认一份文件 `annotated/<focus-slug>.md`，注解正文与各节都装在里面；只有拆开时才由 `<focus-slug>/README.md` 当入口、各分册各占一份。
 5. **抽数据手册**：按「数据结构手册」整理；被 2 份以上阅读版引用时才单独成 `data-structures.md`，否则写进阅读版末尾一节。
-6. **写路径讲解**：按「README 与路径文档」把各段串成端到端讲法；单入口单链路就写进 README，不另开 `<path>.md`。
+6. **写路径讲解**：按「入口文件与路径文档」把各段串成端到端讲法；单入口单链路就写进入口文件，不另开 `<path>.md`。
 7. **交叉链接 & 交付前检查**（见下「交付前检查」）。
 8. **记 project-memory**：按「与 project-memory 的集成」落盘与记账。
 9. **迭代答疑**：用户会就阅读版追问概念，按下面“答疑模式”处理。
@@ -58,16 +58,16 @@ geekLens 被触发时，**必须**把 calm-explain 作为本次阅读版的讲�
 
 ## 目录布局
 
-放在 `./tmp/annotated/<focus-slug>/`（由 project-memory 管理该目录）。**默认单文件，长到读不动才长成目录。**
+放在 `./tmp/annotated/`（该目录由 project-memory 管理）。**默认单文件，长到读不动才长成目录。**
 
 默认（大多数焦点）：
 
 ```
-./tmp/annotated/<focus-slug>/
-└── README.md        # 焦点一句话、来源、阅读顺序、注解正文、数据表、路径讲解、自测题
+./tmp/annotated/
+└── <focus-slug>.md    # tags front-matter + 焦点、来源、阅读顺序、注解正文、数据表、路径讲解、自测题
 ```
 
-默认布局里没有 `data-structures.md`、没有 `<path>.md`、没有子目录 README——它们各自只是这份文件里的一节或一张表。
+文件名就是焦点 slug，它同时是入口。默认布局里没有 `README.md`、没有 `data-structures.md`、没有 `<path>.md`、没有子目录——它们各自只是这份文件里的一节或一张表。
 
 触发「何时才拆」后：
 
@@ -82,7 +82,7 @@ geekLens 被触发时，**必须**把 calm-explain 作为本次阅读版的讲�
 └── <path>.md                # 仅当链路要跨多份阅读版才单独成文
 ```
 
-同一焦点内命名与注解风格一致；改前/改后用 `before/`、`after/` 子目录或文件名后缀区分，并排放在同一 `<topic>` 下，别散落。
+同一焦点内命名与注解风格一致；改前/改后用 `before/`、`after/` 子目录或文件名后缀区分，并排放在同一 `<topic>` 下，别散落。拆开之后每份文件都是一个独立文档，头部的 `tags` 与来源块照写，别只在 README 里写一次。
 
 ## 文件数最小化与合并
 
@@ -92,14 +92,14 @@ geekLens 被触发时，**必须**把 calm-explain 作为本次阅读版的讲�
 
 - **同类合并**：同一条路径上相邻的函数/文件、同一机制的多个分支、同一结构的几组字段，写进同一份阅读版，用分节标题和 ①②③ 编号分层，而不是一项一份。
 - **手册内联**：`data-structures.md` 只在被 **≥2 份**阅读版引用时才单独成文件；否则作为阅读版末尾的「数据结构」一节。
-- **路径内联**：只有一个入口、一条链路的焦点，端到端讲法就写进 README 的「阅读顺序」+ 一段串联说明，不另开 `<path>.md`。
-- **子目录 README 可省**：文件少、或顺序已由顶层 README 文件表说清时，不写子目录 README。
+- **路径内联**：只有一个入口、一条链路的焦点，端到端讲法就写进入口文件的「阅读顺序」+ 一段串联说明，不另开 `<path>.md`。
+- **子目录 README 可省**：文件少、或顺序已由入口文件表说清时，不写子目录 README。
 - **小改前/改后同文**：同一文件里的小改动，用行尾 `// ← 改前：…` 或一张对照小表讲，不复制两份文件；只有大范围重写、需要并排对照时才拆 `before/`、`after/`。
-- **图随文**：mermaid 直接放正文对应段落；只有导出的 SVG 才进 `diagrams/`，不为图另写说明文件。
+- **图随文**：mermaid 直接放正文对应段落；只有导出的 SVG 进同目录 `assets/`，不为图另写说明文件。
 
 ### 何时才拆
 
-满足任一条才新增文件，并在顶层 README 文件表里写清理由：
+满足任一条才新增文件，并在入口文件表里写清理由：
 
 1. 单份顺读超过约 400 行，或读者要来回滚动才能对照两处；
 2. 有几块内容各自独立顺读，读者可能只读其中一块；
@@ -111,19 +111,31 @@ geekLens 被触发时，**必须**把 calm-explain 作为本次阅读版的讲�
 
 - 合并后若读者要在同一份文件里反复跳转才能对上号，说明该拆——**顺读性优先于文件数**。
 - 合并只发生在阅读版里；不为少一个文件去删内容，也不压掉本该成段讲的握手。
-- 合并后删掉空壳文件并修好相对链接；不留 `index.md`、`notes.md`、`summary.md`、`TODO.md` 这类纯导航/备忘文档——导航由顶层 README 文件表承担。
+- 合并后删掉空壳文件并修好相对链接；不留 `index.md`、`notes.md`、`summary.md`、`TODO.md` 这类纯导航/备忘文档——导航由入口文件的文件表承担。
 
 ## 注解版怎么做
 
 ### 每个阅读版顶部固定写
 
-```text
+先 `tags` front-matter，再 H1，再来源块。**只写 `tags`，没有 status / title / date 字段**（project-memory 的约定）：
+
+```markdown
+---
+tags: [annotated, cache-eviction]
+---
+
+# <焦点一句话>
+
 来源：<原文件路径>  （commit <rev> / 快照 <日期>）
 角色：<本文件在焦点里负责什么>
 关系：<与相邻阅读版/数据手册的关系>
 改动：<无 / 相对改前改了什么>
 读完你会知道：<2–3 条，具体到“能说出什么”，不写“理解了 X”这类空话>
 ```
+
+- `tags` 1~3 个，小写 kebab-case，**第一个是主 tag**（取焦点主题）；它让 `find-memory.py --tag <主 tag>` 能直接找到这份阅读版，也是 `check-memory.py` 主题统计的来源。
+- 优先复用项目里已有的 tag，避免 `cache` / `caching` / `缓存` 这类同义变体。
+- 拆成多份文件后，每份都写自己的 `tags` 与来源块——它们各自是独立文档，不靠入口文件代写。
 
 ### 注解约定（保持全局一致）
 
@@ -201,21 +213,23 @@ atomic_store_explicit(&ring->tail,
 md 里直接内嵌 mermaid 代码块。要导出图片或 SVG 时用 Pele（Obsidian 出的 Mermaid 渲染器，约 Mermaid.js 的 1/6 体积、同步、零运行时依赖）：
 
 ```bash
-node scripts/export-diagram.mjs README.md diagrams/tail.svg --n 2   # 也可传 .mmd，或 - 读 stdin
+node scripts/export-diagram.mjs <focus-slug>.md assets/tail.svg --n 2   # 也可传 .mmd，或 - 读 stdin
 ```
+
+导出的 SVG 放**入口文件同目录的 `assets/`**——图是文档的附件，不是 `outputs/` 里的运行产物（project-memory 对演示类内容同样这么放）。
 
 它只吃 Mermaid 语法、只覆盖 12.1 子集、不认 `%%{init}%%` / `themeVariables`（颜色走 `--pele-*`）——所以渲染一次就顺带完成了语法检查，报错行号相对代码块内部。首次用先 `npm i -D pele`（Node >= 20）。
 
-## README 与路径文档
+## 入口文件与路径文档
 
-- **顶层 README**：焦点一句话、来源与快照、**阅读顺序**、文件表。单文件布局时它同时承载注解正文与各节。
+- **入口文件**：单文件布局时就是 `annotated/<focus-slug>.md` 本身，它承载焦点一句话、来源与快照、**阅读顺序**、注解正文与各节；拆开之后入口是 `<focus-slug>/README.md`，只放焦点、来源、文件表与阅读顺序。
 - **子目录 README**：只在子目录里有多份文件、且需要单独说明顺序与关系时才写。
-- **端到端路径文档** `<path>.md`：从入口到出口，把各阅读版按顺序串起来，指出每一步的关键握手。链路只涉及 1–2 份阅读版时，写进 README 的「阅读顺序」即可。
+- **端到端路径文档** `<path>.md`：从入口到出口，把各阅读版按顺序串起来，指出每一步的关键握手。链路只涉及 1–2 份阅读版时，写进入口文件的「阅读顺序」即可。
 - **路径文档结尾给 3–5 个自测题**，每题都要能在阅读版里指到具体位置查到答案；不要写“你是否理解了”这类无法自检的问题。
-- 交叉链接一律用**相对路径**，保证在编辑器/渲染器里可点；改前/改后互链，阅读版链回数据手册（若已拆出）。
+- **链接**：同一焦点内部（改前/改后、阅读版 ↔ 数据手册）用**相对路径**，方便在编辑器里点；回指别处的阅读版或项目记忆时用 wiki 链接 `[[annotated/<focus-slug>]]`（从 `./tmp/` 根起算，免 `.md`，可带 `|别名` 与 `#标题`）。两种 `check-memory.py` 都认，别写成裸文件名——`docs/` 外的重名不报错，但裸名会指向错的那份。
 - 文件表只列**真实存在的文件**，并在“角色”一栏写清它为什么单独成文（触发的是哪条拆分条件）。
 
-文件表示例：
+文件表示例（拆开后的入口文件）：
 
 ```markdown
 | 文件 | 角色 | 对应源码 |
@@ -226,9 +240,16 @@ node scripts/export-diagram.mjs README.md diagrams/tail.svg --n 2   # 也可传 
 
 ## 与 project-memory 的集成
 
-- 阅读版固定放 `./tmp/annotated/<focus-slug>/`；没有 project-memory 时退化为 `./annotated/<focus-slug>/` + 目录内 `CHANGELOG.md`。
-- 每完成一轮往当天 `./tmp/journal/` 追加一行；焦点演进时更新 `./tmp/STATE.md`；稳定结论升级到 `docs/` 前**先问用户**。
-- 目录、门槛和格式以 project-memory 为准，本 skill 不重复。
+阅读版是 `./tmp/annotated/` 下的普通文档，落盘与生命周期完全按 project-memory 的规则；本文件只写 geekLens 特有的那几步。
+
+1. **放**：默认 `./tmp/annotated/<focus-slug>.md`；触发拆分后才建 `<focus-slug>/`。`tags` 写在 front-matter，第一个是主 tag。
+2. **记**：完成一轮往当天 `./tmp/journal/YYYY-MM-DD.md` 追加一行——焦点、产出了什么、来源 commit。只追加，不回头整理。
+3. **挂**：收尾时把入口挂进 `./tmp/STATE.md` 的「关键链接」（或「进行中」）；`STATE.md` 是覆盖更新，不往里堆过程，过程留在 journal。
+4. **验**：`python tmp/scripts/check-memory.py` 查断链与歧义（`annotated/` 是活目录，里面的链接会被校验）；`python tmp/scripts/find-memory.py --tag <主 tag>` 确认这份阅读版能被检索到。
+5. **退役**：被新阅读版取代、或对应源码已删改到无法对照时，整份移 `archive/annotated/<focus-slug>/`（单文件则移该文件），正文留一条「被 [[…]] 取代」，并在 `archive/INDEX.md` 追加一行：日期 / 原路径 / 去向 / 原因或取代者。**移动，不删。**
+6. **升级结论**：要进项目 `docs/` 前**先问用户**，按 project-memory 的 `references/migration.md` 重写，不直接搬过去。
+
+**降级路径**：目标项目没有 project-memory 时，放 `./annotated/`，继续遵守同样的 `tags` 与链接约定，并用 `./annotated/CHANGELOG.md` 一行一条记账（日期 / 改了什么 / 来源 commit）。目录、门槛、归档规则一旦有了 project-memory，就以它为准，本 skill 不重复。
 
 ## 答疑模式
 
@@ -247,10 +268,11 @@ node scripts/export-diagram.mjs README.md diagrams/tail.svg --n 2   # 也可传 
 
 - 焦点一句话说清，边界（入口、出口、依赖）也说清。
 - 来源齐全：原路径 + commit/日期、角色、关系、改动说明（日期只作时点，不必追源码漂移）。
-- **文件数最小**：数一遍实际文件，每个都能一句话回答“为什么不能并进上一份”；能合并的已合并，理由写进顶层 README 文件表。
-- 没有空壳文档（`index.md` / `notes.md` / `summary.md` / `TODO.md`），导航只靠顶层 README 文件表。
-- 括号/缩进平衡；无失效引用（旧「§x」、旧措辞）；README 的文件、锚点、相对链接可达。
-- 能按 README 顺序读到路径讲解，没有无关的全量函数。
+- 头部有 `tags` front-matter，1~3 个、小写 kebab-case、第一个是主 tag；没有 status / title / date 字段。
+- **文件数最小**：数一遍实际文件，每个都能一句话回答“为什么不能并进上一份”；能合并的已合并，理由写进入口文件的文件表。
+- 没有空壳文档（`index.md` / `notes.md` / `summary.md` / `TODO.md`），导航只靠入口文件的文件表。
+- 括号/缩进平衡；无失效引用（旧「§x」、旧措辞）；入口文件的文件、锚点、链接可达。
+- 能按入口文件的顺序读到路径讲解，没有无关的全量函数。
 
 **源码纪律**
 
@@ -267,4 +289,5 @@ node scripts/export-diagram.mjs README.md diagrams/tail.svg --n 2   # 也可传 
 
 - 关键结论能回到源码证据，或标为推断/待验证；自测题每题都可答。
 - 是顺读版，不是纯 diff/patch。
-- 先骨架后逐段；project-memory 已记（journal 一行、STATE 更新）。
+- 先骨架后逐段；project-memory 已记（journal 一行、STATE 挂链）。
+- 有工具集时跑过 `check-memory.py`，断链与歧义为 0；`find-memory.py --tag <主 tag>` 能查到这份阅读版。
